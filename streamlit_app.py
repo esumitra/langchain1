@@ -10,7 +10,7 @@ def generate_response(input_text):
   st.info(llm(input_text))
 
 with st.form('my_form'):
-  text = st.text_area('Enter your question here')
+  text = st.text_area('Enter your question here', value='Explain how to solve a quadratic equation to a middle school student with steps')
   submitted = st.form_submit_button('Submit')
   generate_response(text)
 

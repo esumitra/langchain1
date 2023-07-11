@@ -1,0 +1,7 @@
+# unversioned
+streamlit
+openai
+langchain
+
+# versioned
+

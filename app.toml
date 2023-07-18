@@ -1,0 +1,17 @@
+# application configuration
+[openai]
+# check model compatibility at https://platform.openai.com/docs/models/model-endpoint-compatibility
+model_name=text-davinci-003
+client_name=study_buddy
+
+[personality_templates]
+person_1=explain with detailed steps how to {topic}. Before and after the explanation, add long encouraging messages like an experienced middle school teacher
+person_2=explain with detailed steps how to {topic}. Before and after the explanation, add long encouraging messages like a silly cartoon character like Daffy Duck
+person_3=explain with detailed steps how to {topic}. Before and after the explanation, add long encouraging messages like a talented song-writer, a fashion icon, an annoying, fame-hungry person like Taylor Swift
+
+[personality_names]
+Middle School Teacher=person_1
+Daffy Duck=person_2
+Taylor Swift=person_3
+
+

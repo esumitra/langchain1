@@ -17,7 +17,12 @@ config = configparser.ConfigParser()
 config.read('app.toml')
 # st.session_state.person=''
 st.title('Your Algebra Study Buddy')
-
+st.markdown(
+  """
+    How would you like a study buddy with a quirky personality? 
+    Pick a personality, ask a question, and see how your buddy can help you learn algebra. 💯
+  """
+)
 with st.sidebar:
   open_ai_key:str = st.text_input('OpenAI API Key')
   pnames:list[str] = [x[0] for x in config.items('personality_names')]

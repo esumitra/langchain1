@@ -14,4 +14,9 @@ Middle School Teacher=person_1
 Daffy Duck=person_2
 Taylor Swift=person_3
 
+[teacher_topic_summary]
+model_name=text-davinci-003
+client_name=teacher_summary
+
+
 

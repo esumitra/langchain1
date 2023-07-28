@@ -3,6 +3,13 @@ streamlit
 openai
 langchain
 tiktoken
+chromadb
 
 # versioned
+# chromadb==0.4.3
+# langchain==0.0.246
+# openai==0.27.8
+# streamlit==1.24.1
+# tiktoken==0.4.0
+
 

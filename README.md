@@ -17,7 +17,6 @@ conda use chatgpt1
 2. Install the dependencies
 
 ```
-echo -e "streamlit\nopenai\nlangchain\ntiktoken" > requirements.txt
 pip install -r requirements.txt
 ```
 
@@ -33,6 +32,6 @@ To deploy to streamlit cloud
 4. Push changes to the main branch
 
 ### License
-Copyright 2023, esumitra
+Copyright 2023, Edward Sumitra
 
 Licensed under the MIT License.

@@ -1,8 +1,12 @@
-## AI Algebra Study Buddy
-An AI Algebra Study Buddy that can help school students with their math practice. The buddy is built with Chat-GPT and LangChain.
+## AI Classroom Tools
+AI tools for the classroom including
+- an Algebra Study Buddy that can help school students with their math practice.
+- A teacher tool to summarize current science articles for engaging discussions with students
 
+### See the Demo
+See the live demo at https://eds-ai-classroom-1.streamlit.app/
 
-### Install developer environment
+### Build and deploy the project
 1. Create a local environment for the project
 e.g.,
 ```
@@ -13,13 +17,13 @@ conda use chatgpt1
 2. Install the dependencies
 
 ```
-echo -e "streamlit\nopenai\nlangchain" > requirements.txt
+echo -e "streamlit\nopenai\nlangchain\ntiktoken" > requirements.txt
 pip install -r requirements.txt
 ```
 
 3. Run the app locally
 
-`streamlit run streamlit_app.py`
+`streamlit run Home.py`
 
 ### Deploy to Streamlit Cloud
 To deploy to streamlit cloud

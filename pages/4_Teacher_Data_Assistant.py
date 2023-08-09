@@ -25,9 +25,14 @@ def init(appname: str) -> None:
 def load_csv_file(file_path:str) -> pd.DataFrame:
   log.info(f'loading input data file: ${file_path}')
   df = pd.read_csv(file_path)
+  with st.expander('See data'):
+    tmp_df = df.copy(deep=True)
+    st.write(tmp_df)
   return df
 
-def generate_response(csv_file:str, query: str) -> str:
+@st.cache_resource(max_entries=1)
+def create_agent(csv_file:str):
+  '''Creates an agent for a file and caches the result'''
   log.info(f'creating new agent ...')
   global config
   model_name:str = config.get('Data_Assistant', 'model_name')
@@ -36,6 +41,10 @@ def generate_response(csv_file:str, query: str) -> str:
   llm = ChatOpenAI(model=model_name, temperature=float(temp), openai_api_key=openai_api_key)
   df = load_csv_file(csv_file)
   agent = create_pandas_dataframe_agent(llm, df, verbose=True, agent_type=AgentType.OPENAI_FUNCTIONS)
+  return agent
+
+def generate_response(csv_file:str, query: str) -> str:
+  agent = create_agent(csv_file)
   response = agent.run(query)
   return response
 
@@ -63,5 +72,6 @@ page('A Virtual Data Assistant for Teachers',
      Sample questions to ask:
 
      - How many students are performing below grade level?
-     - What is the median score of the class? 
+     - What is the median score of the class?
+     - Which schools have Yes English learners with less than 25% mid or above grade level?
      ''')

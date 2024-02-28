@@ -1,7 +1,7 @@
 # application configuration
 [openai]
 # check model compatibility at https://platform.openai.com/docs/models/model-endpoint-compatibility
-model_name=text-davinci-003
+model_name=gpt-4-1106-preview
 client_name=study_buddy
 
 [personality_templates]

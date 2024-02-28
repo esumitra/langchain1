@@ -5,6 +5,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import create_pandas_dataframe_agent
 from langchain.agents.agent_types import AgentType
 from streamlit.logger import get_logger
+from logging import Logger
+
 import configparser 
 from dataclasses import dataclass
 

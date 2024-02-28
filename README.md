@@ -11,7 +11,7 @@ See the live demo at https://eds-ai-classroom-1.streamlit.app/
 e.g.,
 ```
 conda create -n chatgpt1 python=3.9
-conda use chatgpt1
+conda activate chatgpt1
 ```
 
 2. Install the dependencies

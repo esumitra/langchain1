@@ -1,20 +1,14 @@
-# unversioned
-# streamlit
-# openai
-# langchain
-# tiktoken
-# chromadb
-# pandas
-# tabulate
-
 # versioned
-chromadb==0.4.3
-langchain==0.0.246
-openai==0.27.8
-pandas==2.0.3
-streamlit==1.24.1
+# 02282024
+chromadb== 0.4.24
+langchain==0.1.9
+langchain-openai==0.0.8
+langchain-community==0.0.24
+langchain_experimental==0.0.53
+openai== 1.12.0
+pandas==2.2.1
+streamlit==1.31.1
 tabulate==0.9.0
-tiktoken==0.4.0
-
+tiktoken==0.6.0
 
 

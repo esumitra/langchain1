@@ -1,28 +1,44 @@
+# This demo uses LangChain experimental features
+# see https://github.com/langchain-ai/langchain/discussions/11680
+
 from typing import Any
 import streamlit as st
 import pandas as pd
-from langchain.chat_models import ChatOpenAI
-from langchain.agents import create_pandas_dataframe_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.utils.utils import convert_to_secret_str
+from langchain_experimental.agents import create_pandas_dataframe_agent
 from langchain.agents.agent_types import AgentType
 from streamlit.logger import get_logger
-from logging import Logger
-
 import configparser 
-from dataclasses import dataclass
 
 # global objects
 # log: streamlit logger
 # config: for application config
 # st: for streamlit components
 # initialize global objects
-openai_api_key:str=''
 
+# session keys
+# api_key = Open AI API key
 def init(appname: str) -> None:
   global log, config
   log = get_logger(__name__)
   config = configparser.ConfigParser()
   config.read('app.toml')
   log.info('started %s', appname)
+
+def create_chat_client() -> ChatOpenAI:
+  # create chat client with api_key and model name
+  model_name:str = config.get('Data_Assistant', 'model_name')
+  client_id:str = config.get('Data_Assistant', 'client_name')
+  log.info('using model %s', model_name)
+  open_ai_key = st.session_state.api_key
+  llm = ChatOpenAI(
+    name=client_id,
+    temperature=0,
+    api_key=convert_to_secret_str(open_ai_key),
+    model=model_name
+  )
+  return llm
 
 def load_csv_file(file_path:str) -> pd.DataFrame:
   log.info(f'loading input data file: ${file_path}')
@@ -34,13 +50,12 @@ def load_csv_file(file_path:str) -> pd.DataFrame:
 
 @st.cache_resource(max_entries=1)
 def create_agent(csv_file:str):
-  '''Creates an agent for a file and caches the result'''
+  '''Creates an dataframe agent for input CSV file and caches the result.
+
+  Returns a pandas data frame agent that can be used for querying.
+  '''
   log.info(f'creating new agent ...')
-  global config
-  model_name:str = config.get('Data_Assistant', 'model_name')
-  client_id:str = config.get('Data_Assistant', 'client_name')
-  temp = config.get('Data_Assistant', 'temperature')
-  llm = ChatOpenAI(model=model_name, temperature=float(temp), openai_api_key=openai_api_key)
+  llm = create_chat_client()
   df = load_csv_file(csv_file)
   agent = create_pandas_dataframe_agent(llm, df, verbose=True, agent_type=AgentType.OPENAI_FUNCTIONS)
   return agent
@@ -55,7 +70,7 @@ def page(title:str, desc:str) -> None:
   st.set_page_config(page_title=title)
   st.title(title)
   st.markdown(desc)
-  openai_api_key = st.text_input('OpenAI API Key', type = 'password')
+  openai_api_key = st.text_input('OpenAI API Key', type = 'password', key='api_key')
   with st.form('file upload'):
     uploaded_file = st.file_uploader('Upload a CSV data file', type=['csv'])
     query_text = st.text_input('Enter your question:', placeholder = 'How many rows in the file?')
@@ -75,5 +90,5 @@ page('A Virtual Data Assistant for Teachers',
 
      - How many students are performing below grade level?
      - What is the median score of the class?
-     - Which schools have Yes English learners with less than 25% mid or above grade level?
+     - Which schools have English learners with less than 25% mid or above grade level?
      ''')

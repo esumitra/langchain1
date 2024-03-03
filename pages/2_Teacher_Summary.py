@@ -3,7 +3,16 @@ from langchain.llms import OpenAI
 from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain import PromptTemplate
+from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    SystemMessagePromptTemplate
+)
+from typing import List
+from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.utils.utils import convert_to_secret_str
+
 from streamlit.logger import get_logger
 import configparser 
 
@@ -12,8 +21,8 @@ import configparser
 # config: for application config
 # st: for streamlit components
 
-# initialize global objects
-openai_api_key:str=''
+# session keys
+# api_key = Open AI API key 
 
 def init(appname: str) -> None:
   global log, config
@@ -22,12 +31,24 @@ def init(appname: str) -> None:
   config.read('app.toml')
   log.info('started %s', appname)
 
-def generate_response(text: str) -> str:
-  model_name:str = config.get('teacher_topic_summary', 'model_name')
-  client_id:str = config.get('teacher_topic_summary', 'client_name')
+def create_chat_client() -> ChatOpenAI:
+  """Create a chat client with model name and api key
+  """
+  model_name:str = config.get('openai', 'model_name')
+  client_id:str = config.get('openai', 'client_name')
   log.info('using model %s', model_name)
+  open_ai_key = st.session_state.api_key
+  llm = ChatOpenAI(
+    name=client_id,
+    temperature=0,
+    api_key=convert_to_secret_str(open_ai_key),
+    model=model_name
+  )
+  return llm
+
+def generate_response(text: str) -> str:
   # instantiate llm model
-  llm = OpenAI(temperature=0.0, openai_api_key=openai_api_key, model=model_name, client=client_id)
+  llm = create_chat_client()
   # split text
   text_splitter = CharacterTextSplitter()
   txts = text_splitter.split_text (text)
@@ -46,7 +67,7 @@ def page(title:str, desc:str) -> None:
   global openai_api_key
   result = []
   with st.form('summarize_form', clear_on_submit=False):
-    openai_api_key = st.text_input('OpenAI API Key', type = 'password')
+    openai_api_key = st.text_input('OpenAI API Key', type = 'password', key='api_key')
     txt_input = st.text_area('Enter your text', '', height=200)
     submitted = st.form_submit_button('Submit')
     if (submitted and openai_api_key.startswith('sk-')):

@@ -56,10 +56,7 @@ def generate_chat_messages(topic:str, person:str) -> List[BaseMessage]:
   log.info('using messages\n%s', formatted_messages)
   return formatted_messages
 
-
-def generate_response(topic:str, person:str) -> str:
-  """generates response by calling chat api
-  """
+def create_chat_client() -> ChatOpenAI:
   # create chat client with api_key and model name
   model_name:str = config.get('openai', 'model_name')
   client_id:str = config.get('openai', 'client_name')
@@ -71,6 +68,13 @@ def generate_response(topic:str, person:str) -> str:
     api_key=convert_to_secret_str(open_ai_key),
     model=model_name
   )
+  return llm
+
+
+def generate_response(topic:str, person:str) -> str:
+  """generates response by calling chat api
+  """
+  llm = create_chat_client()
   messages = generate_chat_messages(topic, person)
   # get a chat completion from the formatted messages
   result = llm(messages)
@@ -88,7 +92,7 @@ def page() -> None:
 
   # side bar section for API key and buddy selection
   with st.sidebar:
-    open_ai_key:str = st.text_input('OpenAI API Key', key='api_key')
+    open_ai_key:str = st.text_input('OpenAI API Key', type = 'password', key='api_key')
     pnames:list[str] = [x[0] for x in config.items('personality_names')]
     person_name = st.selectbox(
       'What personality would you like for your buddy?',
